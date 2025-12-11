@@ -104,18 +104,17 @@ const Index = () => {
           
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-foreground font-medium mb-6">
-            Seu servidor Skyblock favorito.
+            Seu servidor Skyblock.
           </p>
           
           {/* Description */}
           <p className="text-subtle text-base leading-relaxed mb-8 max-w-md mx-auto">
-            Entre no mundo Skyblock da MaxCraft, com eventos semanais, economia 
-            ativa e uma comunidade divertida.
+            Entre no mundo Skyblock da MaxCraft, com eventos semanais, economia ativa.
           </p>
           
           {/* Discord Button */}
           <a
-            href="https://discord.gg/SEU-LINK-AQUI"
+            href="https://discord.gg/eyvrEYWsMB"
             target="_blank"
             rel="noopener noreferrer"
           >
