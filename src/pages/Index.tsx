@@ -1,137 +1,235 @@
-import { useState, useEffect, useRef } from "react";
-import skyblockBg from "@/assets/skyblock-soft.jpg";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { toast } from "@/hooks/use-toast";
+import { Copy, ExternalLink, X, Swords, Users, Trophy } from "lucide-react";
 
 const DiscordIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className="w-5 h-5"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
     <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z" />
   </svg>
 );
 
-// Floating pixel block component
-const FloatingBlock = ({ 
-  className, 
-  color, 
-  size = 40,
-  delay = 0 
-}: { 
-  className?: string; 
-  color: string; 
-  size?: number;
-  delay?: number;
-}) => (
-  <div
-    className={`absolute floating-block ${className}`}
-    style={{
-      width: size,
-      height: size,
-      background: `linear-gradient(135deg, ${color} 0%, ${color}88 100%)`,
-      transform: `rotate(15deg)`,
-      animationDelay: `${delay}s`,
-    }}
-  />
-);
-
-const Index = () => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!cardRef.current) return;
-      
-      const rect = cardRef.current.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      
-      const x = (e.clientX - centerX) / 50;
-      const y = (e.clientY - centerY) / 50;
-      
-      setMousePosition({ x, y });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+// Floating particles background
+const Particles = () => {
+  const particles = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    delay: Math.random() * 10,
+    duration: 8 + Math.random() * 12,
+    size: 1 + Math.random() * 2,
+  }));
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-page-gradient">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 blur-sm"
-        style={{ backgroundImage: `url(${skyblockBg})` }}
-      />
-      
-      {/* Floating Blocks */}
-      <FloatingBlock 
-        className="top-[15%] left-[10%] animate-drift" 
-        color="#22c55e" 
-        size={60}
-        delay={0}
-      />
-      <FloatingBlock 
-        className="top-[25%] right-[15%] animate-drift-slow" 
-        color="#854d0e" 
-        size={45}
-        delay={2}
-      />
-      <FloatingBlock 
-        className="bottom-[20%] left-[20%] animate-drift" 
-        color="#64748b" 
-        size={35}
-        delay={4}
-      />
-
-      {/* Main Content */}
-      <main className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 py-12">
-        {/* Card with parallax effect */}
+    <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      {particles.map((p) => (
         <div
-          ref={cardRef}
-          className="w-full max-w-lg bg-card/90 backdrop-blur-md rounded-2xl card-shadow p-8 md:p-12 text-center transition-transform duration-200 ease-out"
+          key={p.id}
+          className="particle"
           style={{
-            transform: `translate(${mousePosition.x}px, ${mousePosition.y}px)`,
+            left: `${p.left}%`,
+            bottom: '-10px',
+            width: p.size,
+            height: p.size,
+            animationDelay: `${p.delay}s`,
+            animationDuration: `${p.duration}s`,
           }}
-        >
-          {/* Title with gradient */}
-          <h1 className="text-5xl md:text-6xl font-extrabold text-gradient animate-breathe mb-3">
-            MaxCraft
-          </h1>
-          
-          {/* Subtitle */}
-          <p className="text-lg md:text-xl text-foreground font-medium mb-6">
-            Seu servidor Skyblock.
-          </p>
-          
-          {/* Description */}
-          <p className="text-subtle text-base leading-relaxed mb-8 max-w-md mx-auto">
-            Entre no mundo Skyblock da MaxCraft, com eventos semanais, economia ativa.
-          </p>
-          
-          {/* Discord Button */}
-          <a
-            href="https://discord.gg/eyvrEYWsMB"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button size="xl">
-              <DiscordIcon />
-              Entrar no Discord
-            </Button>
-          </a>
-        </div>
-      </main>
+        />
+      ))}
+    </div>
+  );
+};
 
-      {/* Footer */}
-      <footer className="absolute bottom-0 left-0 right-0 z-10 py-6 text-center">
-        <p className="text-muted-foreground text-sm">
-          MaxCraft © 2025 – Todos os direitos reservados.
-        </p>
-      </footer>
+// Mock ranking data
+const rankingData = [
+  { name: "xKiller", kills: 342 },
+  { name: "PvPMaster", kills: 289 },
+  { name: "BloodHunter", kills: 256 },
+];
+
+const Index = () => {
+  const [rulesOpen, setRulesOpen] = useState(false);
+
+  const copyIP = () => {
+    navigator.clipboard.writeText("jogar.maxcraft.com.br");
+    toast({
+      title: "IP copiado!",
+      description: "jogar.maxcraft.com.br",
+      duration: 2000,
+    });
+  };
+
+  const rules = [
+    "Proibido uso de hacks, cheats ou qualquer modificação que dê vantagem.",
+    "Respeite todos os jogadores. Toxicidade extrema resulta em ban.",
+    "Não é permitido divulgar outros servidores.",
+    "Bugs devem ser reportados. Abusar de bugs é banível.",
+    "A decisão da staff é final em casos de punição.",
+  ];
+
+  return (
+    <div className="relative h-screen w-full overflow-hidden bg-background noise-overlay">
+      <Particles />
+      
+      {/* Main container - fits viewport */}
+      <div className="relative z-10 h-full flex flex-col">
+        {/* Content area */}
+        <main className="flex-1 flex items-center justify-center p-4 md:p-6">
+          <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+            
+            {/* Left side - Brand + CTA */}
+            <div className="flex flex-col justify-center space-y-4 md:space-y-6">
+              {/* Logo */}
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black text-gradient tracking-wider">
+                MAXCRAFT
+              </h1>
+              
+              {/* Headline */}
+              <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground leading-tight">
+                MaxCraft — FullPvP Raiz de Verdade
+              </h2>
+              
+              {/* Subtitle */}
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-md">
+                Clans, guerras épicas, kits estratégicos e arena competitiva. 
+                O PvP raiz que você lembra, com sistema moderno.
+              </p>
+              
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href="https://discord.gg/PyCkk6TnkN"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button size="lg" className="glow-red gap-2">
+                    <DiscordIcon />
+                    Entrar no Discord
+                  </Button>
+                </a>
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={() => setRulesOpen(true)}
+                  className="border-primary/50 hover:border-primary hover:bg-primary/10"
+                >
+                  Ver Regras
+                </Button>
+              </div>
+            </div>
+            
+            {/* Right side - Quick Info Cards */}
+            <div className="grid grid-cols-2 gap-3 md:gap-4 content-center">
+              
+              {/* IP Card */}
+              <div className="card-dark p-3 md:p-4 space-y-2">
+                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                  IP do Servidor
+                </p>
+                <p className="text-sm md:text-base font-bold text-foreground font-mono">
+                  jogar.maxcraft.com.br
+                </p>
+                <Button 
+                  size="sm" 
+                  variant="secondary"
+                  onClick={copyIP}
+                  className="w-full gap-2 text-xs"
+                >
+                  <Copy className="w-3 h-3" />
+                  Copiar IP
+                </Button>
+              </div>
+              
+              {/* Status Card */}
+              <div className="card-dark p-3 md:p-4 space-y-2">
+                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                  Status
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-500 pulse-dot" />
+                  <span className="text-sm md:text-base font-bold text-green-500">Online</span>
+                </div>
+                <p className="text-xs md:text-sm text-muted-foreground">
+                  Players: <span className="text-foreground font-semibold">0/200</span>
+                </p>
+              </div>
+              
+              {/* Features Card */}
+              <div className="card-dark p-3 md:p-4 space-y-2">
+                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                  Destaques
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/20 text-primary text-xs rounded-full font-semibold">
+                    <Users className="w-3 h-3" />
+                    Clans
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/20 text-primary text-xs rounded-full font-semibold">
+                    <Swords className="w-3 h-3" />
+                    Wars
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/20 text-primary text-xs rounded-full font-semibold">
+                    <Trophy className="w-3 h-3" />
+                    Kits
+                  </span>
+                </div>
+              </div>
+              
+              {/* Ranking Card */}
+              <div className="card-dark p-3 md:p-4 space-y-2">
+                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                  Top Kills
+                </p>
+                <div className="space-y-1">
+                  {rankingData.map((player, i) => (
+                    <div key={player.name} className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">
+                        <span className={i === 0 ? "text-yellow-500" : i === 1 ? "text-gray-400" : "text-amber-700"}>
+                          #{i + 1}
+                        </span>{" "}
+                        <span className="text-foreground font-medium">{player.name}</span>
+                      </span>
+                      <span className="text-primary font-semibold">{player.kills}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        
+        {/* Footer */}
+        <footer className="py-3 text-center">
+          <p className="text-xs text-muted-foreground">
+            MaxCraft © 2025 – Todos os direitos reservados.
+          </p>
+        </footer>
+      </div>
+      
+      {/* Rules Modal */}
+      <Dialog open={rulesOpen} onOpenChange={setRulesOpen}>
+        <DialogContent className="bg-card border-border max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
+              <Swords className="w-5 h-5 text-primary" />
+              Regras do Servidor
+            </DialogTitle>
+          </DialogHeader>
+          <ol className="space-y-3 text-sm text-muted-foreground">
+            {rules.map((rule, i) => (
+              <li key={i} className="flex gap-3">
+                <span className="text-primary font-bold">{i + 1}.</span>
+                <span>{rule}</span>
+              </li>
+            ))}
+          </ol>
+          <DialogClose asChild>
+            <Button variant="outline" className="w-full mt-2 border-primary/50">
+              Fechar
+            </Button>
+          </DialogClose>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
