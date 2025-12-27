@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
-import { Copy, ExternalLink, X, Swords, Users, Trophy } from "lucide-react";
+import { Copy } from "lucide-react";
 
 const DiscordIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -40,15 +38,7 @@ const Particles = () => {
   );
 };
 
-// Mock ranking data
-const rankingData = [
-  { name: "xKiller", kills: 342 },
-  { name: "PvPMaster", kills: 289 },
-  { name: "BloodHunter", kills: 256 },
-];
-
 const Index = () => {
-  const [rulesOpen, setRulesOpen] = useState(false);
 
   const copyIP = () => {
     navigator.clipboard.writeText("jogar.maxcraft.com.br");
@@ -59,13 +49,6 @@ const Index = () => {
     });
   };
 
-  const rules = [
-    "Proibido uso de hacks, cheats ou qualquer modificação que dê vantagem.",
-    "Respeite todos os jogadores. Toxicidade extrema resulta em ban.",
-    "Não é permitido divulgar outros servidores.",
-    "Bugs devem ser reportados. Abusar de bugs é banível.",
-    "A decisão da staff é final em casos de punição.",
-  ];
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-background noise-overlay">
@@ -95,7 +78,7 @@ const Index = () => {
                 O PvP raiz que você lembra, com sistema moderno.
               </p>
               
-              {/* CTA Buttons */}
+              {/* CTA Button */}
               <div className="flex flex-wrap gap-3">
                 <a
                   href="https://discord.gg/PyCkk6TnkN"
@@ -107,19 +90,11 @@ const Index = () => {
                     Entrar no Discord
                   </Button>
                 </a>
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  onClick={() => setRulesOpen(true)}
-                  className="border-primary/50 hover:border-primary hover:bg-primary/10"
-                >
-                  Ver Regras
-                </Button>
               </div>
             </div>
             
             {/* Right side - Quick Info Cards */}
-            <div className="grid grid-cols-2 gap-3 md:gap-4 content-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 content-center">
               
               {/* IP Card */}
               <div className="card-dark p-3 md:p-4 space-y-2">
@@ -146,52 +121,8 @@ const Index = () => {
                   Status
                 </p>
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-green-500 pulse-dot" />
-                  <span className="text-sm md:text-base font-bold text-green-500">Online</span>
-                </div>
-                <p className="text-xs md:text-sm text-muted-foreground">
-                  Players: <span className="text-foreground font-semibold">0/200</span>
-                </p>
-              </div>
-              
-              {/* Features Card */}
-              <div className="card-dark p-3 md:p-4 space-y-2">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
-                  Destaques
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/20 text-primary text-xs rounded-full font-semibold">
-                    <Users className="w-3 h-3" />
-                    Clans
-                  </span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/20 text-primary text-xs rounded-full font-semibold">
-                    <Swords className="w-3 h-3" />
-                    Wars
-                  </span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/20 text-primary text-xs rounded-full font-semibold">
-                    <Trophy className="w-3 h-3" />
-                    Kits
-                  </span>
-                </div>
-              </div>
-              
-              {/* Ranking Card */}
-              <div className="card-dark p-3 md:p-4 space-y-2">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
-                  Top Kills
-                </p>
-                <div className="space-y-1">
-                  {rankingData.map((player, i) => (
-                    <div key={player.name} className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">
-                        <span className={i === 0 ? "text-yellow-500" : i === 1 ? "text-gray-400" : "text-amber-700"}>
-                          #{i + 1}
-                        </span>{" "}
-                        <span className="text-foreground font-medium">{player.name}</span>
-                      </span>
-                      <span className="text-primary font-semibold">{player.kills}</span>
-                    </div>
-                  ))}
+                  <span className="w-2 h-2 rounded-full bg-yellow-500 pulse-dot" />
+                  <span className="text-sm md:text-base font-bold text-yellow-500">Desenvolvimento</span>
                 </div>
               </div>
             </div>
@@ -206,30 +137,6 @@ const Index = () => {
         </footer>
       </div>
       
-      {/* Rules Modal */}
-      <Dialog open={rulesOpen} onOpenChange={setRulesOpen}>
-        <DialogContent className="bg-card border-border max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
-              <Swords className="w-5 h-5 text-primary" />
-              Regras do Servidor
-            </DialogTitle>
-          </DialogHeader>
-          <ol className="space-y-3 text-sm text-muted-foreground">
-            {rules.map((rule, i) => (
-              <li key={i} className="flex gap-3">
-                <span className="text-primary font-bold">{i + 1}.</span>
-                <span>{rule}</span>
-              </li>
-            ))}
-          </ol>
-          <DialogClose asChild>
-            <Button variant="outline" className="w-full mt-2 border-primary/50">
-              Fechar
-            </Button>
-          </DialogClose>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
