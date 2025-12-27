@@ -115,6 +115,17 @@ const Index = () => {
                 </Button>
               </div>
               
+              {/* Status Card */}
+              <div className="card-dark p-3 md:p-4 space-y-2">
+                <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                  Status
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-yellow-500 pulse-dot" />
+                  <span className="text-sm md:text-base font-bold text-yellow-500">Desenvolvimento</span>
+                </div>
+              </div>
+              
               {/* Version Card */}
               <div className="card-dark p-3 md:p-4 space-y-2">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
