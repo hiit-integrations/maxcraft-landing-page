@@ -142,7 +142,7 @@ const Index = () => {
         {/* Footer */}
         <footer className="py-3 text-center">
           <p className="text-xs text-muted-foreground">
-            MaxCraft © 2025 – Todos os direitos reservados.
+            MaxCraft © 2026 – Todos os direitos reservados.
           </p>
         </footer>
       </div>
